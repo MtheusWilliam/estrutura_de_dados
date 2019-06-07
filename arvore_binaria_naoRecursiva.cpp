@@ -16,6 +16,10 @@ typedef struct{
 void inicializa(ARVORE *a){
 	a->raiz = NULL;
 }
+int contaNos(NO *raiz){
+	if(raiz == NULL){ return 0; }
+	return(contaNos(raiz->esq) + 1 + contaNos(raiz->dir));
+}
 
 bool buscaNo(ARVORE *a, int val){
 	bool definicao = false;
@@ -107,6 +111,15 @@ void insereNo(ARVORE *a, int val){
 	}
 }
 
+void exibirArvore(NO *raiz){
+	if(raiz != NULL){
+		printf("%i", raiz->valor);
+		printf("(");
+		exibirArvore(raiz->esq);
+		exibirArvore(raiz->dir);
+		printf(")");
+	}
+}
 
 int main(){
 	
@@ -119,5 +132,9 @@ int main(){
 	insereNo(&a1, 11);
 	insereNo(&a1, 5);
 	buscaNo(&a1, 15);
+	
+	int num = contaNos(a1.raiz);
+	//printf("%i", num);
+	exibirArvore(a1.raiz);
 	return 0;
 }
