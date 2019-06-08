@@ -111,6 +111,50 @@ void insereNo(ARVORE *a, int val){
 	}
 }
 
+//função de busca não dinamica utilizada pela função removeNo
+PONT buscaNo2(PONT raiz, int val, PONT *pai){
+	PONT atual = raiz;
+	*pai = NULL;
+	while(atual != NULL){
+		if(atual->valor == val) return(atual);
+		*pai = atual;
+		if(val < atual->valor) atual = atual->esq;
+		else atual = atual->dir;
+	}
+	return(NULL);
+}
+
+PONT removeNo(PONT raiz, int val){
+	PONT pai, no, p, q;
+	no = buscaNo2(raiz, val, &pai);
+	if(no==NULL) return(raiz);
+	if(!no->esq || !no->dir){
+		if(!no->esq) q = no->dir;
+		else q = no->esq;
+	}
+	else{
+		p = no;
+		q = no->esq;
+		while(q->dir){
+			p = q;
+			q = q->dir;
+		}
+		if(p != no){
+			p->dir = q->esq;
+			q->esq = no->esq;
+		}
+		q->dir = no->dir;
+	}
+	if(!pai){
+		free(no);
+		return(q);
+	}
+	if(val < pai->valor) pai->esq = q;
+	else pai->dir = q;
+	free(no);
+	return(raiz);
+}
+
 void exibirArvore(NO *raiz){
 	if(raiz != NULL){
 		printf("%i", raiz->valor);
@@ -132,6 +176,7 @@ int main(){
 	insereNo(&a1, 11);
 	insereNo(&a1, 5);
 	buscaNo(&a1, 15);
+	removeNo(a1.raiz, 12);
 	
 	int num = contaNos(a1.raiz);
 	//printf("%i", num);
